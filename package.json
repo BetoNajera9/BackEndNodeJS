@@ -1,0 +1,19 @@
+{
+  "name": "backendnodejs",
+  "version": "1.0.0",
+  "description": "Repository for the BackEnd with NodeJs class",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/betonajera9/BackEndNodeJS.git"
+  },
+  "author": "BetoNajera",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/betonajera9/BackEndNodeJS/issues"
+  },
+  "homepage": "https://github.com/betonajera9/BackEndNodeJS#readme"
+}
