@@ -4,7 +4,8 @@
   "description": "Repository for the BackEnd with NodeJs class",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "DEBUG=app:* nodemon index",
+    "start": "NODE_ENV=production node index"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,27 @@
   "bugs": {
     "url": "https://github.com/betonajera9/BackEndNodeJS/issues"
   },
-  "homepage": "https://github.com/betonajera9/BackEndNodeJS#readme"
+  "homepage": "https://github.com/betonajera9/BackEndNodeJS#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.5.5"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "husky": "^4.2.3",
+    "lint-staged": "^10.0.8",
+    "nodemon": "^2.0.2",
+    "prettier": "^1.19.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix"
+  }
 }
