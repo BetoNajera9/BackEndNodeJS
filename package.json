@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/betonajera9/BackEndNodeJS#readme",
   "dependencies": {
+    "@hapi/boom": "^9.1.0",
+    "@hapi/joi": "^17.1.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongodb": "^3.5.5"
