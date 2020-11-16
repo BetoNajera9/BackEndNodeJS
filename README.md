@@ -1,2 +1,2 @@
 # BackEndNodeJS
-Repository for the BackEnd with NodeJs class
+Repository for the BackEnd with NodeJs course
