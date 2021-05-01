@@ -1,17 +1,16 @@
-const boom = require('@hapi/boom')
-const joi = require('@hapi/joi')
+import boom from '@hapi/boom'
 
-function validate (data, schema) {
-  const { error } = joi.validate(data, schema)
-  return error
+const validate = (data, schema) => {
+	const { error } = schema.validate(data)
+	return error
 }
 
-function validationHandler (schema, check = 'body') {
-  return function (req, res, next) {
-    const error = validate(req[check], schema)
+const validationHandler = (schema, check = 'body') => {
+	return (req, res, next) => {
+		const error = validate(req[check], schema)
 
-    error ? next(boom.badRequest(error)) : next()
-  }
+		error ? next(boom.badRequest(error)) : next()
+	}
 }
 
-module.exports = validationHandler
+export default validationHandler

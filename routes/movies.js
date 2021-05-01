@@ -1,114 +1,127 @@
-const express = require('express')
-const MoviesService = require('../services/movies')
+import express from 'express'
+import passport from 'passport'
 
-const {
-  movieIdSchema,
-  createMovieSchema,
-  updateMovieSchema
-} = require('../utils/schemas/movies')
+import MoviesService from '../services/movies'
+import validationHandler from '../utils/middleware/validationHandler'
+import scopesValidationHandler from '../utils/middleware/scopesValidationHandler'
+import {
+	movieIdSchema,
+	createMovieSchema,
+	updateMovieSchema,
+} from '../utils/schemas/movies'
 
-const validationHandler = require('../utils/middleware/validationHandler')
+//JWT Estrategies
+require('../utils/auth/strategies/jwt')
 
-function moviesApi (app) {
-  const router = express.Router()
-  app.use('/api/movies', router)
+const router = express.Router()
+const moviesService = new MoviesService()
 
-  const moviesService = new MoviesService()
+router.get(
+	'/',
+	passport.authenticate('jwt', { session: false }),
+	scopesValidationHandler(['read:movies']),
+	async (req, res, next) => {
+		const { tags } = req.query
+		try {
+			const movies = await moviesService.getMovies({ tags })
 
-  router.get('/', async function (req, res, next) {
-    const { tags } = req.query
+			res.status(200).json({
+				data: movies,
+				message: 'movies listed',
+			})
+		} catch (err) {
+			console.error(err)
+			next(err)
+		}
+	}
+)
 
-    try {
-      const movies = await moviesService.getMovies({ tags })
+router.get(
+	'/:movieId',
+	passport.authenticate('jwt', { session: false }),
+	scopesValidationHandler(['read:movies']),
+	async (req, res, next) => {
+		const { movieId } = req.params
 
-      res.status(200).json({
-        data: movies,
-        message: 'movies listed'
-      })
-    } catch (err) {
-      next(err)
-    }
-  })
+		try {
+			const movies = await moviesService.getMovie({ movieId })
 
-  router.get(
-    '/:movieId',
-    validationHandler({ movieId: movieIdSchema }, 'params'),
-    async function (req, res, next) {
-      const { movieId } = req.params
+			res.status(200).json({
+				data: movies,
+				message: 'movie retrieved',
+			})
+		} catch (err) {
+			console.error(err)
+			next(err)
+		}
+	}
+)
 
-      try {
-        const movies = await moviesService.getMovie({ movieId })
+router.post(
+	'/',
+	passport.authenticate('jwt', { session: false }),
+	scopesValidationHandler(['create:movies']),
+	validationHandler(createMovieSchema),
+	async (req, res, next) => {
+		const { body: movie } = req
+		try {
+			const createdMovieId = await moviesService.createMovie({ movie })
 
-        res.status(200).json({
-          data: movies,
-          message: 'movie retrieved'
-        })
-      } catch (err) {
-        next(err)
-      }
-    }
-  )
+			res.status(201).json({
+				data: createdMovieId,
+				message: 'movie created',
+			})
+		} catch (err) {
+			next(err)
+		}
+	}
+)
 
-  router.post('/', validationHandler(createMovieSchema), async function (
-    req,
-    res,
-    next
-  ) {
-    const { body: movie } = req
-    try {
-      const createdMovieId = await moviesService.createMovie({ movie })
+router.put(
+	'/:movieId',
+	passport.authenticate('jwt', { session: false }),
+	scopesValidationHandler(['update:movies']),
+	validationHandler(movieIdSchema, 'params'),
+	validationHandler(updateMovieSchema),
+	async (req, res, next) => {
+		const { movieId } = req.params
+		const { body: movie } = req
 
-      res.status(201).json({
-        data: createdMovieId,
-        message: 'movie created'
-      })
-    } catch (err) {
-      next(err)
-    }
-  })
+		try {
+			const updatedMovieId = await moviesService.updateMovie({
+				movieId,
+				movie,
+			})
 
-  router.put(
-    '/:movieId',
-    validationHandler({ movieId: movieIdSchema }, 'params'),
-    validationHandler(updateMovieSchema),
-    async function (req, res, next) {
-      const { movieId } = req.params
-      const { body: movie } = req
+			res.status(200).json({
+				data: updatedMovieId,
+				message: 'movie updated',
+			})
+		} catch (err) {
+			next(err)
+		}
+	}
+)
 
-      try {
-        const updatedMovieId = await moviesService.updateMovie({
-          movieId,
-          movie
-        })
+router.delete(
+	'/:movieId',
+	passport.authenticate('jwt', { session: false }),
+	scopesValidationHandler(['read:movies']),
+	validationHandler(movieIdSchema, 'params'),
+	async (req, res, next) => {
+		const { movieId } = req.params
 
-        res.status(200).json({
-          data: updatedMovieId,
-          message: 'movie updated'
-        })
-      } catch (err) {
-        next(err)
-      }
-    }
-  )
+		try {
+			const deletedMovieId = await moviesService.deleteMovie({ movieId })
 
-  router.delete(
-    '/:movieId',
-    validationHandler({ movieId: movieIdSchema }, 'params'),
-    async function (req, res, next) {
-      const { movieId } = req.params
+			res.status(200).json({
+				data: deletedMovieId,
+				message: 'movie deleted',
+			})
+		} catch (err) {
+			next(err)
+		}
+	}
+)
 
-      try {
-        const deletedMovieId = await moviesService.deleteMovie({ movieId })
-
-        res.status(200).json({
-          data: deletedMovieId,
-          message: 'movie deleted'
-        })
-      } catch (err) {
-        next(err)
-      }
-    }
-  )
-}
-
-module.exports = moviesApi
+export default router

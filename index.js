@@ -1,14 +1,27 @@
-const express = require('express');
-const app = express();
+import express from 'express'
+import morgan from 'morgan'
 
-const { config } = require('./config/index');
-const moviesApi = require('./routes/movies.js');
+import config from './config/index'
+import moviesApi from './routes/movies'
+import userMoviesApi from './routes/userMovies'
+import usersApi from './routes/users'
+import authApi from './routes/auth'
+// import { errorHandler, logErrors } from './utils/middleware/errorHandlers'
 
-// body parser
-app.use(express.json());
+const app = express()
 
-moviesApi(app);
+//Middlewares
+app.use(express.json())
+app.use(morgan('dev'))
 
-app.listen(config.port, function() {
-  console.log(`Listening http://localhost:${config.port}`);
-});
+app.use('/api/movie', moviesApi)
+app.use('/api/user', usersApi)
+app.use('/api/auth', authApi)
+app.use('/api/user-movies', userMoviesApi)
+
+// app.use(errorHandler())
+// app.use(logErrors())
+
+app.listen(config.api.port, () => {
+	console.log(`Listening http://localhost:${config.api.port}`)
+})

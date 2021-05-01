@@ -1,44 +1,66 @@
 {
-  "name": "backendnodejs",
-  "version": "1.0.0",
-  "description": "Repository for the BackEnd with NodeJs class",
-  "main": "index.js",
-  "scripts": {
-    "dev": "DEBUG=app:* nodemon index",
-    "start": "NODE_ENV=production node index"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/betonajera9/BackEndNodeJS.git"
-  },
-  "author": "BetoNajera",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/betonajera9/BackEndNodeJS/issues"
-  },
-  "homepage": "https://github.com/betonajera9/BackEndNodeJS#readme",
-  "dependencies": {
-    "@hapi/boom": "^9.1.0",
-    "@hapi/joi": "^17.1.1",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "mongodb": "^3.5.5"
-  },
-  "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.0",
-    "eslint-plugin-prettier": "^3.1.2",
-    "husky": "^4.2.3",
-    "lint-staged": "^10.0.8",
-    "nodemon": "^2.0.2",
-    "prettier": "^1.19.1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.js": "eslint --cache --fix"
-  }
+	"name": "backendnodejs",
+	"version": "1.0.0",
+	"description": "Repository for the BackEnd with NodeJs class",
+	"main": "index.js",
+	"scripts": {
+		"dev": "set NODE_ENV=dev& nodemon --exec babel-node -r dotenv/config index",
+		"start": "set NODE_ENV=prod & node index",
+		"script": "nodemon --exec babel-node -r dotenv/config scripts/seedApiKeys"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/betonajera9/BackEndNodeJS.git"
+	},
+	"author": "BetoNajera",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/betonajera9/BackEndNodeJS/issues"
+	},
+	"homepage": "https://github.com/betonajera9/BackEndNodeJS#readme",
+	"dependencies": {
+		"@hapi/boom": "^9.1.0",
+		"bcrypt": "^5.0.1",
+		"dotenv": "^8.2.0",
+		"express": "^4.17.1",
+		"joi": "^17.4.0",
+		"jsonwebtoken": "^8.5.1",
+		"mongodb": "^3.5.5",
+		"morgan": "^1.10.0",
+		"passport": "^0.4.1",
+		"passport-http": "^0.3.0",
+		"passport-jwt": "^4.0.0"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.13.16",
+		"@babel/core": "^7.13.16",
+		"@babel/node": "^7.13.13",
+		"@babel/plugin-transform-runtime": "^7.13.15",
+		"@babel/preset-env": "^7.13.15",
+		"chalk": "^2.4.2",
+		"crypto": "^1.0.1",
+		"eslint": "^6.8.0",
+		"eslint-config-prettier": "^6.10.0",
+		"eslint-plugin-prettier": "^3.1.2",
+		"husky": "^4.2.3",
+		"lint-staged": "^10.0.8",
+		"nodemon": "^2.0.2",
+		"prettier": "^1.19.1"
+	},
+	"babel": {
+		"presets": [
+			"@babel/preset-env"
+		],
+		"plugins": [
+			"@babel/plugin-transform-runtime"
+		]
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"lint-staged": {
+		"*.js": "eslint --cache --fix"
+	}
 }
